@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace v8wrap
 {
+	typedef void * TypeId;
+
 	namespace Internal
 	{
 		// Convenience function to extract and cast a pointer stored in a v8::External
@@ -43,5 +45,16 @@ namespace v8wrap
 			val.Dispose();
 			val.Clear();
 		}
+
+		// Provides a unique type id for a given type
+		template<class TYPE>
+		struct type_id
+		{
+			operator TypeId ()
+			{
+				static int id;
+				return &id;
+			}
+		};
 	}
 }
