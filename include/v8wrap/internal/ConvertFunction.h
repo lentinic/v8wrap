@@ -121,7 +121,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 1);
 
-				auto fn = external_cast<void()>(args.Data());
+				auto fn = external_cast<void(P0)>(args.Data());
 				fn(Convert<P0>::FromJS(args[0]));
 				return v8::Undefined();
 			}
@@ -130,7 +130,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 1);
 
-				auto fn = external_cast<std::function<void()> >(args.Data());
+				auto fn = external_cast<std::function<void(P0)> >(args.Data());
 				(*fn)(Convert<P0>::FromJS(args[0]));
 				return v8::Undefined();
 			} 
@@ -143,7 +143,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 2);
 
-				auto fn = external_cast<R()>(args.Data());
+				auto fn = external_cast<R(P0,P1)>(args.Data());
 				return Convert<R>::ToJS(fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1])));
 			}
 
@@ -151,7 +151,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 2);
 
-				auto fn = external_cast<std::function<R()> >(args.Data());
+				auto fn = external_cast<std::function<R(P0,P1)> >(args.Data());
 				return Convert<R>::ToJS((*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1])));
 			}
 		};
@@ -163,7 +163,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 2);
 
-				auto fn = external_cast<void()>(args.Data());
+				auto fn = external_cast<void(P0,P1)>(args.Data());
 				fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]));
 				return v8::Undefined();
 			}
@@ -172,7 +172,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 2);
 
-				auto fn = external_cast<std::function<void()> >(args.Data());
+				auto fn = external_cast<std::function<void(P0,P1)> >(args.Data());
 				(*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]));
 				return v8::Undefined();
 			} 
@@ -185,7 +185,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 3);
 
-				auto fn = external_cast<R()>(args.Data());
+				auto fn = external_cast<R(P0,P1,P2)>(args.Data());
 				return Convert<R>::ToJS(fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]),
 					Convert<P2>::FromJS(args[2])));
 			}
@@ -194,7 +194,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 3);
 
-				auto fn = external_cast<std::function<R()> >(args.Data());
+				auto fn = external_cast<std::function<R(0,P1,P2)> >(args.Data());
 				return Convert<R>::ToJS((*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]),
 					Convert<P2>::FromJS(args[2])));
 			}
@@ -207,7 +207,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 3);
 
-				auto fn = external_cast<void()>(args.Data());
+				auto fn = external_cast<void(P0,P1,P2)>(args.Data());
 				fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]), Convert<P2>::FromJS(args[2]));
 				return v8::Undefined();
 			}
@@ -216,7 +216,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 3);
 
-				auto fn = external_cast<std::function<void()> >(args.Data());
+				auto fn = external_cast<std::function<void(P0,P1,P2)> >(args.Data());
 				(*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]), Convert<P2>::FromJS(args[2]));
 				return v8::Undefined();
 			} 
@@ -229,7 +229,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 4);
 
-				auto fn = external_cast<R()>(args.Data());
+				auto fn = external_cast<R(P0,P1,P2,P3)>(args.Data());
 				return Convert<R>::ToJS(fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]),
 					Convert<P2>::FromJS(args[2]), Convert<P3>::FromJS(args[3])));
 			}
@@ -238,7 +238,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 4);
 
-				auto fn = external_cast<std::function<R()> >(args.Data());
+				auto fn = external_cast<std::function<R(P0,P1,P2,P3)> >(args.Data());
 				return Convert<R>::ToJS((*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]),
 					Convert<P2>::FromJS(args[2]), Convert<P3>::FromJS(args[3])));
 			}
@@ -251,7 +251,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 4);
 
-				auto fn = external_cast<void()>(args.Data());
+				auto fn = external_cast<void(P0,P1,P2,P3)>(args.Data());
 				fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]), Convert<P2>::FromJS(args[2]),
 					Convert<P3>::FromJS(args[3]));
 				return v8::Undefined();
@@ -261,7 +261,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 4);
 
-				auto fn = external_cast<std::function<void()>>(args.Data());
+				auto fn = external_cast<std::function<void(P0,P1,P2,P3)> >(args.Data());
 				(*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]), Convert<P2>::FromJS(args[2]),
 					Convert<P3>::FromJS(args[3]));
 				return v8::Undefined();
@@ -275,7 +275,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 5);
 
-				auto fn = external_cast<R()>(args.Data());
+				auto fn = external_cast<R(P0,P1,P2,P3,P4)>(args.Data());
 				return Convert<R>::ToJS(fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]),
 					Convert<P2>::FromJS(args[2]), Convert<P3>::FromJS(args[3]), Convert<P4>::FromJS(args[4])));
 			}
@@ -284,7 +284,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 5);
 
-				auto fn = external_cast<std::function<R()> >(args.Data());
+				auto fn = external_cast<std::function<R(P0,P1,P2,P3,P4)> >(args.Data());
 				return Convert<R>::ToJS((*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]),
 					Convert<P2>::FromJS(args[2]), Convert<P3>::FromJS(args[3]), Convert<P5>::FromJS(args[4])));
 			}
@@ -297,7 +297,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 5);
 
-				auto fn = external_cast<void()>(args.Data());
+				auto fn = external_cast<void(P0,P1,P2,P3,P4)>(args.Data());
 				fn(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]), Convert<P2>::FromJS(args[2]),
 					Convert<P3>::FromJS(args[3]), Convert<P4>::FromJS(args[4]));
 				return v8::Undefined();
@@ -307,7 +307,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 5);
 
-				auto fn = external_cast<std::function<void()>>(args.Data());
+				auto fn = external_cast<std::function<void(P0,P1,P2,P3,P4)> >(args.Data());
 				(*fn)(Convert<P0>::FromJS(args[0]), Convert<P1>::FromJS(args[1]), Convert<P2>::FromJS(args[2]),
 					Convert<P3>::FromJS(args[3]), Convert<P4>::FromJS(args[4]));
 				return v8::Undefined();
