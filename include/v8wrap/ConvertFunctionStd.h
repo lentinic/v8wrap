@@ -82,7 +82,7 @@ namespace v8wrap
 				args[1] = Convert<P1>::ToJS(a1);
 
 				return Internal::invoke<R>(global, fn, 2, args);
-			}
+			};
 		}
 	};
 
@@ -104,7 +104,7 @@ namespace v8wrap
 				args[2] = Convert<P2>::ToJS(a2);
 
 				return Internal::invoke<R>(global, fn, 3, args);
-			}
+			};
 		}
 	};
 
@@ -127,7 +127,7 @@ namespace v8wrap
 				args[3] = Convert<P3>::ToJS(a3);
 
 				return Internal::invoke<R>(global, fn, 4, args);
-			}
+			};
 		}
 	};
 
@@ -151,7 +151,7 @@ namespace v8wrap
 				args[4] = Convert<P4>::ToJS(a4);
 			
 				return Internal::invoke<R>(global, fn, 5, args);
-			}
+			};
 		}
 	};
 }

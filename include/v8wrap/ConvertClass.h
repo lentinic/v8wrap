@@ -22,53 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #pragma once
 
-#include <memory>
 #include <v8.h>
-#include "internal/ClassField.h"
-#include "internal/Assert.h"
 
 namespace v8wrap
 {
-	template<class CLASS>
-	class ClassDescription
-	{
-	public:
-		ClassDescription()
-			:	FnTemplate(v8::FunctionTemplate::New(&Constructor)),
-				Prototype(FnTemplate->PrototypeTemplate())
-		{
-			FnTemplate->InstanceTemplate()->SetInternalFieldCount(2);
-		}
-
-		template<class TYPE, TYPE CLASS:: * PTR>
-		void Field(const char * name)
-		{
-			Prototype->SetAccessor(v8::String::New(name), &Internal::Field<CLASS,TYPE>::Get<PTR>,
-				&Internal::Field<CLASS,TYPE>::Set<PTR>);
-		}
-
-	public:
-		v8::Handle<v8::FunctionTemplate> FnTemplate;
-		v8::Handle<v8::ObjectTemplate> Prototype;
-
-		static v8::Handle<v8::Value> Constructor(const v8::Arguments & args)
-		{
-			if (!args.IsConstructCall())
-				return v8::Undefined();
-
-			CLASS * inst = new CLASS;
-
-			TypeId id = Internal::type_id<CLASS>();
-			args.Holder()->SetPointerInInternalField(0, id);
-			args.Holder()->SetPointerInInternalField(1, inst);
-
-			auto ret(v8::Persistent<v8::Object>::New(args.Holder()));
-			ret.MakeWeak(inst, &Internal::WeakCallback<CLASS>);
-
-			return ret;
-		}
-	};
-
 	template<class CLASS>
 	struct Convert<CLASS *>
 	{
@@ -90,6 +47,24 @@ namespace v8wrap
 				return NULL;
 
 			return static_cast<CLASS*>(obj->GetPointerFromInternalField(1));
+		}
+		
+		static v8::Handle<v8::Value> ToJS(CLASS * inst)
+		{
+			TypeId id = Internal::type_id<CLASS>();
+			auto ctx = v8::Context::GetCurrent();
+			
+			V8WRAP_ASSERT(!ctx.IsEmpty());
+
+			auto fnval = ctx->Global()->GetHiddenValue(Internal::type_id<CLASS>());
+			if (fnval.IsEmpty() || !fnval->IsFunction())
+				return v8::Undefined();
+
+			auto fn = v8::Function::Cast(*fnval);
+			v8::Handle<v8::Value> ext = v8::External::New(inst);
+			v8::Local<v8::Object> jsref = fn->NewInstance(1, &ext);
+
+			return jsref;
 		}
 	};
 }
