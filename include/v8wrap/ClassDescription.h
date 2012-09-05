@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <v8.h>
 #include <map>
+#include <memory>
 #include "internal/ClassField.h"
 #include "internal/Assert.h"
 
@@ -32,71 +33,79 @@ namespace v8wrap
 	template<class CLASS>
 	class ClassDescription
 	{
-	public:
-		ClassDescription()
-			:	FnTemplate(v8::FunctionTemplate::New(&Constructor)),
-				Prototype(FnTemplate->PrototypeTemplate())
-		{
-			FnTemplate->InstanceTemplate()->SetInternalFieldCount(2);
-		}
-		
+	public:	
 		template<class TYPE, TYPE CLASS:: * PTR>
 		void Field(const char * name)
 		{
+			auto Prototype(FunctionTemplate()->PrototypeTemplate());
 			Prototype->SetAccessor(v8::String::New(name), &Internal::Field<CLASS,TYPE>::Get<PTR>,
 				&Internal::Field<CLASS,TYPE>::Set<PTR>);
 		}
 
-		void Install(v8::Handle<v8::Object> module, const char * name)
+		static v8::Handle<v8::FunctionTemplate> FunctionTemplate()
+		{
+			static v8::Persistent<v8::FunctionTemplate> FnTemplate;
+			if (FnTemplate.IsEmpty())
+			{
+				FnTemplate = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(&Constructor));
+				FnTemplate->InstanceTemplate()->SetInternalFieldCount(3);
+			}
+			return FnTemplate;
+		}
+
+	private:
+		typedef std::map<CLASS *, v8::Persistent<v8::Object> > InstanceMap;
+
+		static InstanceMap & Instances()
+		{
+			static InstanceMap instances;
+			return instances;
+		}
+
+		static v8::Handle<v8::Value> Constructor(const v8::Arguments & args)
 		{
 			auto ctx = v8::Context::GetCurrent();
 			V8WRAP_ASSERT(!ctx.IsEmpty());
 
-			auto fn = FnTemplate->GetFunction();
-			ctx->Global()->SetHiddenValue(Internal::type_id<CLASS>(), fn);
-			module->Set(v8::String::New(name), fn);
-		}
-
-	private:
-		v8::Handle<v8::FunctionTemplate> FnTemplate;
-		v8::Handle<v8::ObjectTemplate> Prototype;
-
-		static v8::Handle<v8::Value> Constructor(const v8::Arguments & args)
-		{
-			static std::map<CLASS *, v8::Persistent<v8::Object> > instance_map;
-
 			if (!args.IsConstructCall())
 				return v8::Undefined();
 
-			CLASS * inst;
-			if (args[0]->IsExternal())
-				inst = Internal::external_cast<CLASS>(args[0]);
-			else
-				inst = new CLASS;
+			CLASS * inst = nullptr;
+			std::shared_ptr<CLASS> * shared = nullptr;
 
-			if (instance_map.count(inst) > 0)
-				return instance_map[inst];
+			if (args.Length() == 1 && args[0]->IsExternal())
+			{
+				inst = Internal::external_cast<CLASS>(args[0]);
+			}
+			else if (args.Length() == 2 && args[0]->IsExternal())
+			{
+				shared = Internal::external_cast<std::shared_ptr<CLASS> >(args[0]);
+				inst = shared->get();
+			}
+			else
+			{
+				inst = new CLASS;
+			}
+
+			InstanceMap & instances = Instances();
+			if (instances.count(inst) > 0)
+				return instances[inst];
+
+			if (shared == nullptr)
+				shared = new std::shared_ptr<CLASS>(inst);
 
 			TypeId id = Internal::type_id<CLASS>();
-			
-			//std::shared_ptr<CLASS> * ptr = new std::shared_ptr<CLASS>(inst);
 
 			args.Holder()->SetPointerInInternalField(0, id);
-			args.Holder()->SetPointerInInternalField(1, inst);
+			args.Holder()->SetPointerInInternalField(1, shared);
+			args.Holder()->SetPointerInInternalField(2, inst);
 
 			auto ret(v8::Persistent<v8::Object>::New(args.Holder()));
-			ret.MakeWeak(inst, &Internal::WeakCallback<CLASS>);
+			ret.MakeWeak(shared, &Internal::WeakCallback<std::shared_ptr<CLASS> >);
 
-			instance_map[inst] = ret;
+			instances[inst] = ret;
 
 			return ret;
-		}
-
-		static v8::Handle<v8::Value> Destructor(v8::Persistent<v8::Value> val, void * param)
-		{
-			delete static_cast<TYPE*>(param);
-			val.Dispose();
-			val.Clear();
 		}
 	};
 }
