@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <memory>
 #include <v8.h>
+#include "ClassDescription.h"
 
 namespace v8wrap
 {

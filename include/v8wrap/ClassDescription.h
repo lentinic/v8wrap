@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <v8.h>
 #include <map>
 #include <memory>
+#include "ClassMethod.h"
 #include "internal/ClassField.h"
 #include "internal/Assert.h"
 
@@ -40,6 +41,12 @@ namespace v8wrap
 			auto Prototype(FunctionTemplate()->PrototypeTemplate());
 			Prototype->SetAccessor(v8::String::New(name), &Internal::Field<CLASS,TYPE>::Get<PTR>,
 				&Internal::Field<CLASS,TYPE>::Set<PTR>);
+		}
+
+		template<class SIG>
+		ClassMethod<SIG,CLASS> Method()
+		{
+			return ClassMethod<SIG, CLASS>();
 		}
 
 		static v8::Handle<v8::FunctionTemplate> FunctionTemplate()

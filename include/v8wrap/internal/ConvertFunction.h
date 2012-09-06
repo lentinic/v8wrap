@@ -344,7 +344,8 @@ namespace v8wrap
 			{
 				auto callback = &Internal::Function<SIG>::CallStd;
 				auto copy = new std::function<SIG>(fn);
-				auto arg = v8::Persistent<v8::External>::New(v8::External::New(copy));
+				auto ext = v8::External::New(copy);
+				auto arg(v8::Persistent<v8::External>::New(ext));
 				arg.MakeWeak(copy, &Internal::WeakCallback<std::function<SIG>>);
 				return v8::FunctionTemplate::New(callback, arg)->GetFunction();
 			}
