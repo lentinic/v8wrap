@@ -55,18 +55,6 @@ namespace v8wrap
 				static int id;
 				return &id;
 			}
-
-			operator v8::Handle<v8::String> ()
-			{
-				union
-				{
-					char	str[sizeof(TypeId) + 1];
-					TypeId	id;
-				};
-				id = (TypeId)(*this);
-				str[sizeof(TypeId)] = 0;
-				return v8::String::New(str);
-			}
 		};
 	}
 }
