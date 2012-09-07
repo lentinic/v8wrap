@@ -56,6 +56,7 @@ namespace v8wrap
 			{
 				FnTemplate = v8::Persistent<v8::FunctionTemplate>::New(v8::FunctionTemplate::New(&Constructor));
 				FnTemplate->InstanceTemplate()->SetInternalFieldCount(3);
+				FnTemplate.MakeWeak(nullptr,&Internal::WeakCallback<int>);
 			}
 			return FnTemplate;
 		}
@@ -108,11 +109,23 @@ namespace v8wrap
 			args.Holder()->SetPointerInInternalField(2, inst);
 
 			auto ret(v8::Persistent<v8::Object>::New(args.Holder()));
-			ret.MakeWeak(shared, &Internal::WeakCallback<std::shared_ptr<CLASS> >);
+			ret.MakeWeak(shared, &WeakObjectCallback);
 
 			instances[inst] = ret;
 
 			return ret;
+		}
+
+		static void WeakObjectCallback(v8::Persistent<v8::Value> val, void * param)
+		{
+			std::shared_ptr<CLASS> * inst = static_cast<std::shared_ptr<CLASS> *>(param);
+
+			InstanceMap & instances = Instances();
+			instances.erase(inst->get());
+			delete inst;
+
+			val.Dispose();
+			val.Clear();
 		}
 	};
 }
