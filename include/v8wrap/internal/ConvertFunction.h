@@ -101,7 +101,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 1);
 
-				auto fn = external_cast<R()>(args.Data());
+				auto fn = external_cast<R(P0)>(args.Data());
 				return Convert<R>::ToJS(fn(Convert<P0>::FromJS(args[0])));
 			}
 
@@ -109,7 +109,7 @@ namespace v8wrap
 			{
 				V8WRAP_ASSERT(args.Length() == 1);
 
-				auto fn = external_cast<std::function<R()> >(args.Data());
+				auto fn = external_cast<std::function<R(P0)> >(args.Data());
 				return Convert<R>::ToJS((*fn)(Convert<P0>::FromJS(args[0])));
 			}
 		};
