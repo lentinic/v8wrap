@@ -26,12 +26,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace v8wrap
 {
-	void InstallGC()
+	inline void InstallGC()
 	{
 		v8::V8::SetFlagsFromString("--expose-gc", 12);
 	}
 
-	void ForceGC()
+	inline void ForceGC()
 	{
 		auto ctx = v8::Context::New();
 		ctx->Enter();

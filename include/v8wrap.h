@@ -26,3 +26,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "v8wrap/ConvertFunction.h"
 #include "v8wrap/ConvertFunctionStd.h"
 #include "v8wrap/ConvertClass.h"
+#include "v8wrap/GarbageCollection.h"
