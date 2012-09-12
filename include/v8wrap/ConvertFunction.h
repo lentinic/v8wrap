@@ -50,4 +50,12 @@ namespace v8wrap
 	template<class R, class P0, class P1, class P2, class P3, class P4>
 	struct Convert<R(*)(P0,P1,P2,P3,P4)> : public Internal::ConvertFunction<R(P0,P1,P2,P3,P4)>
 	{};
+
+	// A convenience function for adding a C++ function to a v8 Object
+	//	- obviously this could be abused since it doesn't make sure we are trying to wrap a function
+	template<class FnSig>
+	void AddFunction(v8::Handle<v8::Object> & obj, const char * name, FnSig * fn)
+	{
+		obj->Set(v8::String::New(name), Convert<FnSig*>::ToJS(fn));
+	}
 }

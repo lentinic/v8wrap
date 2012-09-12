@@ -39,12 +39,11 @@ namespace Console
 		getline(cin, input);
 		return input;
 	}
-
 	void Register(Handle<Object> & container)
 	{
 		auto console = Object::New();
-		console->Set(String::New("WriteLine"), v8wrap::Convert<void(*)(const string &)>::ToJS(&Console::WriteLine));
-		console->Set(String::New("ReadLine"), v8wrap::Convert<string(*)()>::ToJS(&Console::ReadLine));
+		v8wrap::AddFunction(console, "WriteLine", &WriteLine);
+		v8wrap::AddFunction(console, "ReadLine", &ReadLine);
 		container->Set(String::New("Console"), console);
 	}
 }
