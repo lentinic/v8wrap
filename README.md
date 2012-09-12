@@ -1,8 +1,8 @@
-##v8wrap
+#v8wrap
 
 v8wrap is a small set of header files meant to make the process of working with V8 in C++ a little easier.  It was written as an exercise in working with V8 - I had been using a few of the other wrapper libraries available (which are great) but found myself wanting to peek behind the scenes and work a little more closely with the V8 API. Now I am throwing this out here in case anyone else might find it useful.  
 
-#Usage
+###Usage
 -----
 At the core of the library is the Convert<TYPE> template and its static methods ToJS and FromJS.  As you might expect from the names, ToJS will take an argument of type TYPE and return an equivalent V8 value handle while FromJS will take a V8 value handle and return an instance of type TYPE.  To make this a little more clear:
 
