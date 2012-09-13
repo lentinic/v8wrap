@@ -15,7 +15,9 @@ Aside from converting back and forth between some basic C++ types (int, float, b
 	//...
 	void foo() { /* Do Something */ }
 	...
-	v8::Context::GetCurrent()->Global()->Set(v8:String::New("foo"), v8wrap::Convert<void(*)()>::ToJS(&foo));
+	v8wrap::AddFunction(v8::Context::GetCurrent()->Global(), "foo", &foo);
+	// AddFunction is a convenience function, calling it here is equivalent to doing this:
+	//		v8::Context::GetCurrent()->Global()->Set(v8:String::New("foo"), v8wrap::Convert<void(*)()>::ToJS(&foo));
 	//...
 ```
 
