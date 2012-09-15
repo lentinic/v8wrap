@@ -47,7 +47,7 @@ To expose a class:
 	desc.Field<float, &Point::y>("y");
 	desc.Method<float()>().Set<&Point::length>("length");
 
-	v8::Context::GetCurrent()->Global->Set(v8::String::New("Point"), desc.FunctionTemplate()->GetFunction());
+	v8::Context::GetCurrent()->Global()->Set(v8::String::New("Point"), desc.FunctionTemplate()->GetFunction());
 ```
 
 Within the current context it is now possible to execute the following script:
